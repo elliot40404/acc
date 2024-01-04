@@ -34,9 +34,16 @@ type TransactionConfig struct {
 	Columns []string
 }
 
+type DeleteConfig struct {
+	Dry     bool
+	Verbose bool
+	All     bool
+	Ids     []string
+}
+
 type TQuery struct {
-	Query  string
-	Config TransactionConfig
+	Query   string
+	Config  TransactionConfig
 	isCount bool
 }
 
@@ -44,6 +51,7 @@ type TransactionRepository interface {
 	CreateTransaction(transaction Transaction) error
 	GetTransactionsWithConfig(c TransactionConfig) ([]Transaction, error)
 	GetTransactionCountWithConfig(c TransactionConfig) (int, error)
+	DeleteTransactions(c DeleteConfig) error
 }
 
 func NewTransactionRepository() TransactionRepository {
@@ -100,17 +108,55 @@ func (r *transactionRepository) GetTransactionCountWithConfig(c TransactionConfi
 	return count, nil
 }
 
+func (r *transactionRepository) DeleteTransactions(c DeleteConfig) error {
+	var query string
+	if c.All {
+		query = "DELETE FROM transactions"
+		if c.Verbose {
+			fmt.Println("DELETE =>", query)
+		}
+		if c.Dry {
+			return nil
+		}
+		_, err := r.db.Exec(query)
+		if err != nil {
+			return err
+		}
+		_, err = r.db.Exec("DELETE FROM sqlite_sequence WHERE name='transactions'")
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	q, args, err := sqlx.In("DELETE FROM transactions WHERE id IN (?)", c.Ids)
+	if err != nil {
+		return err
+	}
+	q = r.db.Rebind(q)
+	if c.Verbose {
+		fmt.Println("DELETE =>", q, args)
+	}
+	if c.Dry {
+		return nil
+	}
+	_, err = r.db.Exec(q, args...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func NewQuery(t TransactionConfig, isCount bool) TQuery {
 	if isCount {
 		return TQuery{
-			Query:  "SELECT COUNT(*) FROM transactions",
-			Config: t,
+			Query:   "SELECT COUNT(*) FROM transactions",
+			Config:  t,
 			isCount: isCount,
 		}
 	}
 	return TQuery{
-		Query:  "SELECT * FROM transactions",
-		Config: t,
+		Query:   "SELECT * FROM transactions",
+		Config:  t,
 		isCount: isCount,
 	}
 }

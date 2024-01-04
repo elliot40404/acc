@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"log/slog"
 	"os"
 	"regexp"
@@ -220,4 +221,11 @@ func SplitAmountRange(amountRange string) []string {
 		}
 	}
 	return filtered
+}
+
+func PromptConfirmation() bool {
+	fmt.Printf("Are you sure? (y/n) : ")
+	var input string
+	fmt.Scanf("%s", &input)
+	return input == "y" || input == "Y"
 }

@@ -6,8 +6,7 @@ A simple cli application to manage and query your income and expenses.
 
 acc
 |- add
-|- list (all, income, expenses) [default: all] -> pagination ???
-|- query / search
+|- list -> filter, sort, paginate, search, print in custom formats
 |- remove
 |- edit
 |- stats
