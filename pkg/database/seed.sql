@@ -1,7 +1,7 @@
 WITH RECURSIVE Counter AS (
     SELECT 1 AS Value
     UNION ALL
-    SELECT Value + 1 FROM Counter WHERE Value < 5
+    SELECT Value + 1 FROM Counter WHERE Value < 500
 ),
 DummyData AS (
     SELECT 
