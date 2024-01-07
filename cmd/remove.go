@@ -17,7 +17,7 @@ var removeCmd = &cobra.Command{
 var ids []string
 
 func init() {
-	rootCmd.AddCommand(removeCmd)
+	RootCmd.AddCommand(removeCmd)
 	removeCmd.Flags().BoolP("all", "A", false, "Remove all transactions")
 	removeCmd.Flags().StringSliceVarP(&ids, "id", "i", []string{}, "Remove a transaction by id. Example: -i 1 -i 2 or --id\"1,2\"")
 	removeCmd.MarkFlagsMutuallyExclusive("all", "id")

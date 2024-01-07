@@ -16,7 +16,7 @@ var addCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(addCmd)
+	RootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringP("type", "t", "", "Type of transaction (income or expense)")
 	addCmd.Flags().StringP("description", "d", "", "Description")
 	addCmd.Flags().Float64P("amount", "a", 0, "Amount")

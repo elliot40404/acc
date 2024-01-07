@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -228,4 +229,18 @@ func PromptConfirmation() bool {
 	var input string
 	fmt.Scanf("%s", &input)
 	return input == "y" || input == "Y"
+}
+
+func ClearScreen() {
+	fmt.Print("\033[H\033[2J")
+}
+
+func ExecShellCmd(command string, args ...string) string {
+	cmd := exec.Command(command, args...)
+	out, err := cmd.Output()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	return string(out)
 }

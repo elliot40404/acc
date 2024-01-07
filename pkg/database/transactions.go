@@ -32,6 +32,9 @@ type TransactionConfig struct {
 	SortAsc bool
 	Desc    string
 	Columns []string
+	IsHRTime bool
+	Format string
+	IsPretty bool
 }
 
 type DeleteConfig struct {
@@ -163,7 +166,7 @@ func NewQuery(t TransactionConfig, isCount bool) TQuery {
 
 func buildQuery(c TransactionConfig, isCount bool) (string, error) {
 	q := NewQuery(c, isCount)
-	q.AddColumns()
+	// q.AddColumns()
 	q.AddType()
 	q.AddDate()
 	q.AddAmount()
