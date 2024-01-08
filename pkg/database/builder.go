@@ -69,7 +69,7 @@ func (q *TQuery) AddAmount() {
 		} else {
 			amountQuery += buildAmountQuery(q.Config.Amount)
 		}
-		if q.Config.TxType != "" && amountQuery != "" {
+		if (q.Config.TxType != "" || q.Config.Date != "") && amountQuery != "" {
 			amountQuery = " AND" + amountQuery
 		} else if amountQuery != "" {
 			amountQuery = " WHERE" + amountQuery

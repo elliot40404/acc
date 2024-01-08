@@ -40,7 +40,7 @@ type model struct {
 }
 
 func (m model) Init() tea.Cmd {
-	return nil
+	return tea.SetWindowTitle("acc list")
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -66,6 +66,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			QC.Page = page
 			return m, nil
+		case "G":
+			m.paginator.Page = m.totalPages
+			page = m.totalPages
+			QC.Page = page
+			return m, nil
+		case "g":
+			m.paginator.Page = 1
+			page = 1
+			QC.Page = page
+			return m, nil
 		}
 	}
 	m.paginator, cmd = m.paginator.Update(msg)
@@ -81,7 +91,9 @@ func (m model) View() string {
 	}
 	table := tableWriter(transactions, TotalTx, *QC, true)
 	b.WriteString(table)
-	b.WriteString("  " + m.paginator.View())
+	if m.totalPages <= 50 {
+		b.WriteString("  " + m.paginator.View())
+	}
 	b.WriteString("\n\n  h/l ←/→ page • q: quit\n")
 	return b.String()
 }

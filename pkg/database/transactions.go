@@ -129,6 +129,11 @@ func (r *transactionRepository) DeleteTransactions(c DeleteConfig) error {
 		if err != nil {
 			return err
 		}
+		// VACUUM is used to rebuild the database file, repacking it into a minimal amount of disk space.
+		_, err = r.db.Exec("VACUUM")
+		if err != nil {
+			return err
+		}
 		return nil
 	}
 	q, args, err := sqlx.In("DELETE FROM transactions WHERE id IN (?)", c.Ids)
